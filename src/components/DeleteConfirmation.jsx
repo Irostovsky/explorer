@@ -1,11 +1,25 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+const TIMER = 3000;
 
 export default function DeleteConfirmation({ onConfirm, onCancel }) {
+  const [remainingTime, setRemaingTime] = useState(0);
+
+  useEffect(() => {
+    const remainingTimeInterval = setInterval(() => {
+      setRemaingTime((prevValue) => {
+        return prevValue + 10;
+      });
+    }, 10);
+    return () => {
+      clearInterval(remainingTimeInterval);
+    };
+  }, []);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       onConfirm();
-      console.log("Autoconfirmation is triggered");
-    }, 3000);
+    }, TIMER);
     return () => {
       clearTimeout(timer);
     };
@@ -23,6 +37,7 @@ export default function DeleteConfirmation({ onConfirm, onCancel }) {
           Yes
         </button>
       </div>
+      <progress value={remainingTime} max={TIMER} />
     </div>
   );
 }
